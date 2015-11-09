@@ -1,6 +1,6 @@
 {
   "name": "db3-query-string",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SQL query in JSON format",
   "scripts": {
     "test": "./node_modules/.bin/mocha"
