@@ -50,6 +50,8 @@ _.extend(app.stringify, {
   insert: function (d) {
     if (d.select)
       return 'insert ' + escapeId(d.table) + ' ' + app.stringify.select(d.select)
+    if (!_.size(d.set))
+      d = {id: null}
     var query = 'insert ' + escapeId(d.table) + ' set ' + set.query(d.set)
     if (d.update)
       query += ' on duplicate key update ' + set.query(d.update)
