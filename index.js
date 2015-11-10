@@ -11,8 +11,11 @@ var app = module.exports = {
   where: where,
   orderBy: orderBy,
   stringify: function (d, value) {
-    if (_.isString(d))
-      return format(d, value)
+    if (_.isString(d)) {
+      if (!_.isUndefined(value))
+        return format(d, value)
+      return d
+    }
     if (_.isFunction(app.stringify[d.name]))
       return app.stringify[d.name](d)
     return String(d)

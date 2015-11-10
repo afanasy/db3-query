@@ -25,5 +25,11 @@ describe('#queryString', function () {
         expect(s(value)).to.be.equal(key)
       })
     })
+    it('does nothing with string query', function () {
+      expect(s('?')).to.be.equal('?')
+    })
+    it('replaces placeholders in string query when there are 2 arguments', function () {
+      expect(s('?', 'a')).to.be.equal("'a'")
+    })
   })
 })
