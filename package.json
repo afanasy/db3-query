@@ -1,6 +1,6 @@
 {
   "name": "db3-query-string",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "SQL query in JSON format",
   "scripts": {
     "test": "./node_modules/.bin/mocha"
@@ -23,8 +23,8 @@
     "db3-order-by": "1.0.2"
   },
   "devDependencies": {
-    "expect.js": "*",
-    "mocha": "*"
+    "expect.js": "0.3.1",
+    "mocha": "2.3.3"
   },
   "engines": {
     "node": ">= 0.10"

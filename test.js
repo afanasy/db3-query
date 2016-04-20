@@ -31,5 +31,11 @@ describe('#queryString', function () {
     it('replaces placeholders in string query when there are 2 arguments', function () {
       expect(s('?', 'a')).to.be.equal("'a'")
     })
+    it('accepts number as table name', function () {
+      expect(s({name: 'dropTable', table: 0})).to.be.equal('drop table `0`')
+    })
+    it('accepts number as field name', function () {
+      expect(s({name: 'select', table: 'person', field: 0})).to.be.equal('select `0` from `person`')
+    })
   })
 })

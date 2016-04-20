@@ -1,21 +1,20 @@
 var
   _ = require('underscore'),
   format = require('sqlstring').format,
-  escapeId = require('sqlstring').escapeId,
-  set = require('db3-set'),
-  where = require('db3-where'),
-  orderBy = require('db3-order-by')
+  escapeId = require('sqlstring').escapeId
 
 var app = module.exports = {
-  set: set,
-  where: where,
-  orderBy: orderBy,
+  set: require('db3-set'),
+  where: require('db3-where'),
+  orderBy: require('db3-order-by'),
   stringify: function (d, value) {
     if (_.isString(d)) {
       if (!_.isUndefined(value))
         return format(d, value)
       return d
     }
+    if (!_.isUndefined(d.table))
+      d.table = String(d.table)
     if (_.isFunction(app.stringify[d.name]))
       return app.stringify[d.name](d)
     return String(d)
@@ -26,9 +25,10 @@ _.extend(app.stringify, {
   createTable: function (d) {
     if (d.like)
       return format('create table ?? like ??', [d.table, d.like])
-    if (!_.size(d.field))
-      d.field = ['id', 'name']
-    d.field = _.map(d.field, function (field) {
+    var field = d.field
+    if (!_.size(field))
+      field = ['id', 'name']
+    field = _.map(field, function (field) {
       var type = 'text'
       if (field == 'id')
         type = 'bigint primary key auto_increment'
@@ -36,7 +36,7 @@ _.extend(app.stringify, {
         type = 'bigint'
       return escapeId(field) + ' ' + type
     }).join(', ')
-    return 'create table ' + escapeId(d.table) + ' (' + d.field + ')'
+    return 'create table ' + escapeId(d.table) + ' (' + field + ')'
   },
   dropTable: function (d) {
     return format('drop table ??', d.table)
@@ -55,35 +55,37 @@ _.extend(app.stringify, {
       return 'insert ' + escapeId(d.table) + ' ' + app.stringify.select(d.select)
     if (!_.size(d.set))
       d = {id: null}
-    var query = 'insert ' + escapeId(d.table) + ' set ' + set.query(d.set)
+    var query = 'insert ' + escapeId(d.table) + ' set ' + app.set.query(d.set)
     if (d.update)
-      query += ' on duplicate key update ' + set.query(d.update)
+      query += ' on duplicate key update ' + app.set.query(d.update)
     return query
   },
   update: function (d) {
-    return format('update ?? set ', d.table) + set.query(d.set) + ' where ' + where.query(d.where)
+    return format('update ?? set ', d.table) + app.set.query(d.set) + ' where ' + app.where.query(d.where)
   },
   delete: function (d) {
-    return 'delete from ' + escapeId(d.table) + ' where ' + where.query(d.where)
+    return 'delete from ' + escapeId(d.table) + ' where ' + app.where.query(d.where)
   },
   select: function (d) {
     if (_.isString(d))
       d = {table: d}
-    d.field = d.field || '*'
-    if (_.isString(d.field))
-      d.field = [d.field]
-    d.field = _.map(d.field, function (d) {
+    var field = d.field
+    if (_.isUndefined(field))
+     field = '*'
+    if (!_.isArray(field))
+      field = [field]
+    field = _.map(field, function (d) {
       if (d != '*')
-        return escapeId(d)
+        return escapeId(String(d))
       return d
     }).join(', ')
-    var query = 'select ' + d.field + ' from ' + escapeId(d.table)
-    d.where = where.query(d.where)
-    if (d.where)
-      query += ' where ' + d.where
-    d.orderBy = orderBy.query(d.orderBy)
-    if (d.orderBy)
-      query += ' order by ' + d.orderBy
+    var query = 'select ' + field + ' from ' + escapeId(d.table)
+    var where = app.where.query(d.where)
+    if (where)
+      query += ' where ' + where
+    var orderBy = app.orderBy.query(d.orderBy)
+    if (orderBy)
+      query += ' order by ' + orderBy
     if (d.limit)
       query += ' limit ' + +d.limit
     return query
