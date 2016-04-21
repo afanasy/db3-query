@@ -37,5 +37,8 @@ describe('#queryString', function () {
     it('accepts number as field name', function () {
       expect(s({name: 'select', table: 'person', field: 0})).to.be.equal('select `0` from `person`')
     })
+    it('if insert set is empty, set = {id: null} ', function () {
+      expect(s({name: 'insert', table: 'person'})).to.be.equal('insert `person` set `id` = NULL')
+    })
   })
 })
