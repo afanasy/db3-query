@@ -101,5 +101,22 @@ _.extend(app.stringify, {
     if (d.limit)
       query += ' limit ' + +d.limit
     return query
+  },
+  groupBy: function (d) {
+    var where = app.where.query(d.where)
+    var field = _.clone(d.field || 'id')
+    if (!_.isArray(field))
+      field = [field]
+    var lastField = escapeId(field.pop())
+    field = _.map(field, function (d, i) {return escapeId(field)}).join(', ')
+    var query = 'select ' + field
+    if (field.length)
+      query += ', '
+    query += d.func + '(' + lastField + ') as ' + d.func + ' from ' + escapeId(d.table)
+    if (where)
+      query += ' where ' + where
+    if (field.length)
+      query += ' group by ' + field
+    return query
   }
 })

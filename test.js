@@ -23,7 +23,8 @@ var query = {
   'update `person` set `name` = \'Alice\' where `name` = \'Bob\'': {name: 'update', table: 'person', set: {name: 'Alice'}, where: {name: 'Bob'}},
   'delete from `person` where `id` = 1': {name: 'delete', table: 'person', where: 1},
   'delete from `person` where `name` = \'Alice\'': {name: 'delete', table: 'person', where: {name: 'Alice'}},
-  'select `0` from `person`': {name: 'select', table: 'person', field: 0}
+  'select `0` from `person`': {name: 'select', table: 'person', field: 0},
+  'select count(`id`) as count from `person` where `name` = \'Bob\'': {name: 'groupBy', func: 'count', table: 'person', where: {name: 'Bob'}}
 }
 
 describe('#queryString', function () {
