@@ -1,6 +1,7 @@
 var
   _ = require('underscore'),
   format = require('sqlstring').format,
+  escape = require('sqlstring').escape,
   escapeId = require('sqlstring').escapeId
 
 var app = module.exports = {
@@ -51,12 +52,22 @@ _.extend(app.stringify, {
     return format('alter table ?? drop ??', [d.table, d.drop])
   },
   insert: function (d) {
+    var query = 'insert ' + escapeId(d.table) + ' '
     if (d.select)
-      return 'insert ' + escapeId(d.table) + ' ' + app.stringify.select(d.select)
+      return query + app.stringify.select(d.select)
     var set = d.set
-    if (!_.size(set))
-      set = {id: null}
-    var query = 'insert ' + escapeId(d.table) + ' set ' + app.set.query(set)
+    if (_.isArray(set)) {
+      if (_.size(set)) {
+        query += '('  + _.map(_.keys(_.first(set)), format.bind(this, '??')).join(', ') + ') values ' + _.map(set, function (value) {
+          return '(' + _.map(value, format.bind(format, '?')).join(', ') + ')'
+        }).join(', ')
+      }
+    }
+    else {
+      if (!_.size(set))
+        set = {id: null}
+      query += 'set ' + app.set.query(set)
+    }
     if (d.update)
       query += ' on duplicate key update ' + app.set.query(d.update)
     return query
