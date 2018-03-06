@@ -1,7 +1,6 @@
-var
-  _ = require('underscore'),
-  expect = require('expect.js'),
-  s = require('./').stringify
+var _ = require('underscore')
+var expect = require('expect.js')
+var s = require('./').stringify
 
 var query = {
   'create table `person` (`id` bigint primary key auto_increment, `name` text)': {name: 'createTable', table: 'person'},

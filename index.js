@@ -1,8 +1,7 @@
-var
-  _ = require('underscore'),
-  format = require('sqlstring').format,
-  escape = require('sqlstring').escape,
-  escapeId = require('sqlstring').escapeId
+var _ = require('underscore')
+var format = require('sqlstring').format
+var escape = require('sqlstring').escape
+var escapeId = require('sqlstring').escapeId
 
 var app = module.exports = {
   set: require('db3-set'),
