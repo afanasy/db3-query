@@ -1,6 +1,4 @@
-[![Linux Build][travis-image]][travis-url]
-[travis-image]: https://img.shields.io/travis/afanasy/db3-query-string/master.svg
-[travis-url]: https://travis-ci.org/afanasy/db3-query-string
+[![Build Status](https://api.travis-ci.org/afanasy/db3-query-string.svg)](https://travis-ci.org/afanasy/db3-query-string)
 
 SQL query in JSON format
 
