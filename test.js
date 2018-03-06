@@ -1,5 +1,5 @@
 var _ = require('underscore')
-var expect = require('expect.js')
+var assert = require('assert')
 var s = require('./').stringify
 
 var query = {
@@ -30,14 +30,14 @@ describe('#queryString', function () {
   describe('#stringify', function () {
     _.each(query, function (value, key) {
       it('does ' + value.name, function () {
-        expect(s(value)).to.be.equal(key)
+        assert.equal(s(value), key)
       })
     })
     it('does nothing with string query', function () {
-      expect(s('?')).to.be.equal('?')
+      assert.equal(s('?'), '?')
     })
     it('replaces placeholders in string query when there are 2 arguments', function () {
-      expect(s('?', 'a')).to.be.equal("'a'")
+      assert.equal(s('?', 'a'), "'a'")
     })
   })
 })

@@ -23,7 +23,6 @@
     "db3-order-by": "1.0.2"
   },
   "devDependencies": {
-    "expect.js": "0.3.1",
     "mocha": "2.3.3"
   }
 }
